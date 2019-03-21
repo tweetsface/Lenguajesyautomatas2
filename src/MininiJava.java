@@ -75,7 +75,6 @@ class MininiJava implements MininiJavaConstants {
     }
   }
 
-//Nota Joel--------------------------Cambie los valores del If para que comprobara Expression
   final public void IfStatement() throws ParseException {
     jj_consume_token(IF);
     jj_consume_token(LPAREN);

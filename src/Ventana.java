@@ -9,6 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Ventana extends JFrame implements ActionListener{
 	// Declaracion de Componentes
+	private JTable ts;
 	private JMenuBar barraMenu;									    // Barra para colocar elementos del menu principal
 	private JMenu	[] Menus = new JMenu[3];						// menuArchivo, menuEdicion, menuAyuda --> Elementos del Menu Principal
 	private JMenuItem [][] SubMenuI = new JMenuItem[3][5];			// Matr�z que contendr� los submen�s
@@ -18,7 +19,7 @@ public class Ventana extends JFrame implements ActionListener{
 		new Ventana();
 	}
 	public Ventana() {
-		super ( "MininiJava Compiler" );
+		super ( "Lenguajes y automatas 2" );
 
 		menu();
 		cambioEstilo();
@@ -52,7 +53,7 @@ public class Ventana extends JFrame implements ActionListener{
 
 	}
 	private void menu() {
-																	                                                // Creacion de Componentes
+	
 		barraMenu 	= new JMenuBar();
 		String [][] NombresMenu = {{"Archivo", "A"},
 								   {"Edicion", "E"},
