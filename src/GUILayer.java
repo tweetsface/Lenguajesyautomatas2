@@ -136,10 +136,11 @@ public class GUILayer extends JPanel implements ActionListener {
 		recorreCodigo(codigo);
 		LlenaTabla();
 		if (listaErroresSemanticos.isEmpty()) {
-			Agregar(); // si no hay errores semanticos procedemos a hacer los triplos
+			Agregar(); 
 		}
-	
-
+	for(int i=0;i<t.size();i++) {
+		System.out.println(t.get(i).getNum() + " = " + t.get(i).getOp());
+	}
 		System.out.println("\t" + "TABLA DE SIMBOLOS" + "\t");
 		System.out.println("Variable\t" + "Tipo de dato\t" + "Valor\t" + "Posici�n\t" + "Alcance\t");
 		imprimeTabla();
@@ -152,6 +153,7 @@ public class GUILayer extends JPanel implements ActionListener {
 					+ TablaSimbolos.get(variables.get(i)).getValor() + "\t\t"
 					+  TablaSimbolos.get(variables.get(i)).getPosicion() + "\t"
 					+  TablaSimbolos.get(variables.get(i)).getAlcance());
+	
 		}
 
 	}
@@ -202,7 +204,8 @@ public class GUILayer extends JPanel implements ActionListener {
 
 	public void AgregaVariable(String parrafo, CharSequence Tipo, int pos) {
 		String parrafoAux = "", variable = "", valor = "";
-		CharSequence sIgual = "=", sPublic = "public", sPrivate = "private";
+		CharSequence sIgual = "="
+				+ "", sPublic = "public", sPrivate = "private";
 		if (parrafo.contains(Tipo)) {
 			for (int j = 0; j < parrafo.length(); j++) {
 				if (parrafoAux.contains(Tipo)) {
@@ -216,13 +219,12 @@ public class GUILayer extends JPanel implements ActionListener {
 				}
 				parrafoAux += Character.toString(parrafo.charAt(j));
 			}
-			// Validar si la variable ya esta declarada
+			//VALIDA VARIABLE REPETIDA
 			if (TablaSimbolos.containsKey(variable))
-				listaErroresSemanticos
-						.add("La variable " + "'" + variable + "'" + " ya se encuentra declarada en el renglon "
+				listaErroresSemanticos.add("La variable " + "'" + variable + "'" + " ya se encuentra declarada en el renglon "
 								+ TablaSimbolos.get(variable).getPosicion() + ".");
 			else {
-				// Verificando el valor asignado con el tipo
+				//Verifica tipo de datos
 				if (!verificaTipoConValor(Tipo.toString(), valor)) {
 					listaErroresSemanticos.add("Imposible asignar a variable " + "'" + variable + "' Tipo ("
 							+ Tipo.toString() + ") valor:  " + valor + " renglon " + pos + ".");
@@ -304,14 +306,12 @@ public class GUILayer extends JPanel implements ActionListener {
 			operacion = operaciones.get(i).replaceAll("\\s", "");
 			operacionAux = quitaIgual(operacion);
 			while (!operacionAux.isEmpty()) {
-				//verificamos si contiene un numero negativo
 				if((operacionAux.contains("-")) && esOperador(operacionAux.charAt(operacionAux.indexOf("-") - 1))) {
 							pos=operacionAux.indexOf("-");
 							t.add(new Datos("T"+cont,Character.toString(operacionAux.charAt(pos))+Character.toString(operacionAux.charAt(pos+1))));
 							operacionAux = operacionAux.replace(Character.toString(operacionAux.charAt(pos))+Character.toString(operacionAux.charAt(pos+1)), "");
 							cont++;
 				}
-				// Agregamos primero lo que se encuentra en parentesis
 				if (operacionAux.contains("(")) {
 					pos = operacionAux.indexOf("(") + 1;
 					while (operacionAux.charAt(pos) != ')') {
@@ -324,15 +324,11 @@ public class GUILayer extends JPanel implements ActionListener {
 					cont++;
 					operacionAux = operacionAux.replace(agg, "");
 				} else {
-					// cuando la longitud es de 1, se realiza la operacion con los dos ultimos
-					// triplos
 					if (operacionAux.length() == 1) {
 						agg = t.get(cont-3).getNum() + operacionAux.charAt(0) + t.get(cont-2).getNum();
 						t.add(new Datos("T" + cont, agg));
 						operacionAux = operacionAux.replace(Character.toString(operacionAux.charAt(0)), "");
 					} else {
-						// Cuando la longitud es 2, se realiza la operacion con el operando y el ultimo
-						// triplo
 						if (operacionAux.length() == 2) {
 							System.out.println(cont);
 							agg = Character.toString(operacionAux.charAt(0)) + Character.toString(operacionAux.charAt(1)) + t.get(cont - 2).getNum();
@@ -341,15 +337,12 @@ public class GUILayer extends JPanel implements ActionListener {
 									+ Character.toString(operacionAux.charAt(1)), "");
 							cont++;
 						} else {
-							// Si es un operando se hace un triplo
 							if (!esOperador(operacionAux.charAt(operacionAux.length() - 1))) {
 								agg = Character.toString(operacionAux.charAt(operacionAux.length() - 1));
 								t.add(new Datos("T" + cont, agg));
 								operacionAux = operacionAux.replace(agg, "");
 								cont++;
 							} else {
-								// Si es un operador y su antecesor es un operador se realiza la operacion con
-								// los dos ultimos triplos
 								if (esOperador(operacionAux.charAt(operacionAux.length() - 2))) {
 									agg = t.get(cont - 3).getNum() + Character.toString(operacionAux.charAt(operacionAux.length() - 1))
 											+ t.get(cont - 2).getNum();
@@ -368,6 +361,7 @@ public class GUILayer extends JPanel implements ActionListener {
 										operacionAux = operacionAux.replace(agg, "");
 										cont++;
 									}
+									 System.out.println(t);
 								}
 
 							}
@@ -415,7 +409,7 @@ public class GUILayer extends JPanel implements ActionListener {
             //Se ejecuta el Análisis Léxico/Sintáctico/Semántico
             ae.MainClass();
             resultadoAnalisis.setForeground(Color.GREEN);
-            resultadoAnalisis.setText("El análisis Lexico se ha completado exitosamente");
+            resultadoAnalisis.setText("El analisis Lexico se ha completado exitosamente");
         } catch (ParseException ex) {
             resultadoAnalisis.setForeground(Color.YELLOW);
             resultadoAnalisis.setText("El analisis lexico no se completo");
@@ -445,9 +439,7 @@ public class GUILayer extends JPanel implements ActionListener {
 		// Se recorre el parrafo para obtener la variable de la operaci�n
 		for (int j = 0; j < parrafo.length(); j++) {
 			if (!variableEncontrada && parrafo.charAt(j) == '=' && (parrafo.charAt(j + 1) != '=')) {// Encontramos
-																									// lavariable, lo
-																									// que sigue es la
-																									// operacion
+																									// lavariable, lo																					// que sigue es l																					// operacion
 				variable = parrafoAux;
 				parrafoAux = "";
 				variableEncontrada = true;

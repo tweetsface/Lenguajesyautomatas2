@@ -1,17 +1,17 @@
 class mayor{
-	public static void main(String [] args){
-		int var;
-		int numB;
+	public static void main(String [] a){
+		int v;
+		int n;
 		int M;
-		boolean tf;
+		boolean t;
 		String s;
 		tf = true;
 		M = 3;
-		if(var==numB) {
-			M=var+3+3;
+		if(v==n) {
+			M=v+3+3;
 			print('ASD');
 		} else {
-			M=numB;
+			M=n;
 		}		
 		print(str);
 	}
